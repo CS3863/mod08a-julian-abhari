@@ -15,7 +15,7 @@ public class UseData : MonoBehaviour
 
     int currentEntry;
     private float startDelay = 2.0f;
-    private float timeInterval = 1.0f;
+    private float timeInterval = 0.05f;
 
     void Awake()
     {
@@ -46,17 +46,16 @@ public class UseData : MonoBehaviour
     {
         Debug.Log("Spawn Object called");
         dataObject = data[currentEntry]["xco2"];
-        float co2Data = (System.Convert.ToSingle(dataObject) - 350) * 5;
+        float co2Data = map(System.Convert.ToSingle(dataObject), 388.09f, 426.59f, 1, 3);
+        float scaledData = Mathf.Exp(co2Data);
         currentEntry += 1;
 
-        transform.localScale = new Vector3(co2Data, co2Data, co2Data);
+        transform.localScale = new Vector3(scaledData, scaledData, scaledData);
         Debug.Log("co2 count: " + currentEntry + "\nco2 data: " + co2Data);
+    }
 
-        //if (cubeCount > 0)
-        //{
-        //    Instantiate(myCube);
-        //    Debug.Log("instantiating cube - current cube count: " + cubeCount);
-        //    cubeCount--;
-        //}
+    float map(float value, float domainMin, float domainMax, float newDomainMin, float newDomainMax)
+    {
+        return newDomainMin + ((newDomainMax - newDomainMin) / (domainMax - domainMin)) * (value - domainMin);
     }
 }
