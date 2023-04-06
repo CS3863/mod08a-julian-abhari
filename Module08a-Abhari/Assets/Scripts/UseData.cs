@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting.Dependencies.NCalc;
 
 public class UseData : MonoBehaviour
 {/**
@@ -8,9 +9,11 @@ public class UseData : MonoBehaviour
   * https://github.com/tikonen/blog/tree/master/csvreader
   * */
 
+    public object dataObject;
     List<Dictionary<string, object>> data; 
-    public GameObject myCube;//prefab
-    int cubeCount; //variable 
+    public GameObject myCube;
+
+    int currentEntry;
     private float startDelay = 2.0f;
     private float timeInterval = 1.0f;
 
@@ -24,37 +27,36 @@ public class UseData : MonoBehaviour
             //name, age, speed, description, is the headers of the database
             print("xco2 " + data[i]["xco2"]);
         }
-
-
-    }//end Awake()
+        currentEntry = 0;
+    }
 
     // Use this for initialization
     void Start()
     {
-        
-        // InvokeRepeating("SpawnObject", startDelay, timeInterval);
-    }//end Start()
+        InvokeRepeating("SpawnObject", startDelay, timeInterval);
+    }
 
     // Update is called once per frame
-    void Update()
-    {
-        for (var i = 0; i < data.Count; i++)
-        {
-            float xco2 = (float)data[i]["xco2"];
-            myCube.transform.localScale = new Vector3(xco2, xco2, xco2);
-            // cubeCount += (int) xco2; // convert xco2 data to int and add to cubeCount
-            // Debug.Log("cubeCount" +cubeCount);
-        }
-    }
+    //void Update()
+    //{
+    //    SpawnObject();
+    //}
 
     void SpawnObject()
     {
-        //As long as cube count is not zero, instantiate prefab
-        if (cubeCount > 0)
-        {
-            Instantiate(myCube);
-            Debug.Log("instantiating cube - current cube count: " + cubeCount);
-            cubeCount--;
-        }
+        Debug.Log("Spawn Object called");
+        dataObject = data[currentEntry]["xco2"];
+        float co2Data = (System.Convert.ToSingle(dataObject) - 350) * 5;
+        currentEntry += 1;
+
+        transform.localScale = new Vector3(co2Data, co2Data, co2Data);
+        Debug.Log("co2 count: " + currentEntry + "\nco2 data: " + co2Data);
+
+        //if (cubeCount > 0)
+        //{
+        //    Instantiate(myCube);
+        //    Debug.Log("instantiating cube - current cube count: " + cubeCount);
+        //    cubeCount--;
+        //}
     }
 }
